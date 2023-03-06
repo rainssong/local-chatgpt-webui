@@ -246,7 +246,7 @@ window.addEventListener('load', () => {
     const textbox = document.querySelector('#prompt')
 
     textbox.addEventListener('keydown', (event) => {
-        if (event.keyCode === 13 && !event.ctrlKey && !event.altKey && !event.shiftKey) {
+        if (event.key=='Enter' && !event.ctrlKey && !event.altKey && !event.shiftKey) {
             event.preventDefault()
             submitMessageForm()
             updateTextareaSize(textbox)
