@@ -2,4 +2,4 @@
 
 https://rainssong.github.io/local-chatgpt-webui/src/
 
-一个本地的ChatGPT客户端，需要自备OpenAPI Key，和网络环境
+一个静态纯前端ChatGPT客户端，需要自备OpenAPI Key和网络环境
