@@ -1,3 +1,7 @@
+
+/**
+ * 解析 URL Hash 参数
+ */
 const parseHashParams = () => {
     const hashParams = {}
     const hash = window.location.hash.substring(1) // remove the #
@@ -9,9 +13,21 @@ const parseHashParams = () => {
     return hashParams
 }
 
+// 调用 OpenAI API 完成聊天
 const chatCompletion = (apiKey, data) => {
     const endpoint = 'https://api.openai.com/v1/chat/completions'
     data.model = "gpt-3.5-turbo"
+
+
+    var temprature=localStorage.getItem(`temperature`)
+    var max_tokens=localStorage.getItem(`max_tokens`)
+
+    if(temprature!='')
+        data.temperature=temprature
+
+    if(max_tokens!='')
+        data.max_tokens=max_tokens
+
 
     return fetch(endpoint, {
         method: 'POST',
@@ -27,14 +43,17 @@ const chatCompletion = (apiKey, data) => {
         })
 }
 
+// 隐藏开始页面
 const hideStartView = () => {
     document.querySelector('#start-view').classList.add('hidden')
 }
 
+// 显示开始页面
 const showStartView = () => {
     document.querySelector('#start-view').classList.remove('hidden')
 }
 
+// 设置 API 密钥输入框
 const setupAPIKeyInput = () => {
     const element = document.querySelector('#api-key')
     const savedAPIKey = localStorage.getItem('api-key') || ''
@@ -55,12 +74,14 @@ const setupAPIKeyInput = () => {
     }
 }
 
+// 渲染 Markdown
 const renderMarkdown = md => {
     return DOMPurify.sanitize(marked.parse(md, {
         gfm: true
     }))
 }
 
+// 添加消息
 const addMessage = (message, type) => {
     const element = document.querySelector('#output')
 
@@ -98,14 +119,17 @@ const addMessage = (message, type) => {
     return messageContainer
 }
 
+// 添加我发送的消息
 const addSentMessage = message => {
     return addMessage(message, 'my-message')
 }
 
+// 添加聊天机器人收到的消息
 const addReceivedMessage = message => {
     return addMessage(message, 'response')
 }
 
+// 添加错误消息
 const addErrorMessage = (message, type) => {
     const element = document.querySelector('#output')
 
@@ -119,6 +143,7 @@ const addErrorMessage = (message, type) => {
     return messageContainer
 }
 
+// 平滑滚动
 const smoothScroll = (targetPosition, duration) => {
     const currentPosition = window.pageYOffset
     const distance = targetPosition - currentPosition
@@ -141,11 +166,13 @@ const smoothScroll = (targetPosition, duration) => {
     requestAnimationFrame(animationCallback)
 }
 
+// 判断是否滚动到底部
 const isScrolledToBottom = () => {
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement
     return scrollTop + clientHeight >= scrollHeight
 }
 
+// 更新文本框大小
 const updateTextareaSize = (element) => {
     element.style.height = 0
 
@@ -219,11 +246,12 @@ window.addEventListener('load', () => {
     const textbox = document.querySelector('#prompt')
 
     textbox.addEventListener('keydown', (event) => {
-        if (event.code === 'Enter' && !event.ctrlKey && !event.altKey && !event.shiftKey) {
+        if (event.keyCode === 13 && !event.ctrlKey && !event.altKey && !event.shiftKey) {
             event.preventDefault()
             submitMessageForm()
             updateTextareaSize(textbox)
         }
+
     })
 
     document.querySelector('form').addEventListener('submit', (event) => {
